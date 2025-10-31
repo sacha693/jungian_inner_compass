@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心靈羅盤：內在覺察與能量分佈 </title>
+    <!-- 載入 Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 自定義滾動條樣式，讓整體視覺更和諧 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: #A07D5D; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: #F9F9F9; }
+        /* 新增的背景圖樣式 */
+        body {
+            /* 由於 iframe 環境可能無法載入外部 GitHub 圖片，此處改為使用純色背景或更穩定的 URL */
+            /* 保持原有風格的圖片 URL */
+            background-image: url('https://github.com/sacha693/sachalai-hypnosis/blob/main/indexBk.jpg.jpg?raw=true'); 
+            background-repeat: repeat;
+            background-size: cover; /* 讓背景圖覆蓋整個區域 */
+            background-attachment: fixed; /* 固定背景圖，滾動時不移動 */
+        }
+
+        /* 調整 Range Slider 顏色以適應 Tailwind 主題 */
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #5E7A88; /* deep-flow */
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+        }
+        .range-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #5E7A88; /* deep-flow */
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+        }
+        
+        /* Progress Bar styles for smooth animation */
+        .progress-bar-fill {
+            transition: width 1.5s ease-out, background-color 0.5s;
+        }
+
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'light-sand': '#f7f1e3', /* 瑞光金/淺沙色 */
+                        'deep-flow': '#5E7A88',  /* 沉靜藍/心流 */
+                        'earth-brown': '#A07D5D', /* 大地褐/沙舟 */
+                        'soft-bg': '#F9F9F9',
+                        'accent-dark': '#4A616E', /* Deep Flow Darker */
+                        /* 調整後的顏色與強度對應 */
+                        'zone-red-bg': 'rgba(255, 99, 132, 0.2)',    /* 高強度陰影區 (3.5+) */
+                        'zone-yellow-bg': 'rgba(255, 205, 86, 0.2)', /* 潛在覺察區 (2.0-3.49) */
+                        'zone-green-bg': 'rgba(75, 192, 192, 0.2)',  /* 穩定整合區 (0-1.99) */
+                        /* 進度條前景顏色 */
+                        'score-fill': '#5E7A88', /* deep-flow */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-soft-bg min-h-screen p-4 md:p-8 font-sans">
+
+    <div id="app" class="max-w-4xl mx-auto shadow-2xl rounded-xl overflow-hidden bg-white">
+        
+        <!-- Header & Introduction (區塊一) --><header class="bg-light-sand p-6 md:p-8 text-center border-b-4 border-deep-flow">
+            <!-- 瑞光沙舟 Logo 區塊 --><div class="mb-4">
+                <img src="https://github.com/sacha693/sachalai-hypnosis/blob/main/logo.jpg?raw=true" onerror="this.src='https://placehold.co/150x50/F0E68C/A07D5D?text=瑞光沙舟+Logo'" alt="瑞光沙舟 Logo" class="h-12 w-auto mx-auto object-contain rounded-lg shadow-md">
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-earth-brown mb-2">
+                瑞光沙舟：引領您探索內在覺察
+            </h1>
+            <p class="text-sm md:text-base text-accent-dark leading-relaxed">
+             您所感受到的困擾，是內在正在呼喚您關注的真實訊息。<br>邀請您在三次深呼吸後，傾聽內心的感受，評估您目前受其困擾的程度，以啟動您的內在覺察。</br>
+            <br><strong class="font-bold text-earth-brown text-base mt-2 inline-block">0 =無困擾，1 =輕微(可忽略)，2 =輕度(偶爾覺察)，3 =中度 (持續影響)，4 =顯著 (明顯干擾)，5 =極度困擾
+            </p>
+        </header>
+        <!-- Questionnaire Section (區塊二) --><div id="questionnaire-section" class="p-4 md:p-8 space-y-6">
+            <h2 class="text-2xl font-semibold text-deep-flow border-b pb-2 mb-4">
+                困擾維度評估（影響程度參考上方說明）
+            </h2>
+
+            <!-- Questions will be dynamically generated here by JavaScript --></div>
+        
+        <!-- Submit Button --><div class="text-center p-6 border-t border-soft-bg">
+            <button id="submit-btn" onclick="calculateScores()" 
+                    class="bg-deep-flow hover:bg-accent-dark text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+                啟動我的心靈羅盤 (查看分析)
+            </button>
+        </div>
+
+        <!-- Result Section (區塊三, 四, 五) --><div id="result-section" class="p-4 md:p-8 space-y-8 hidden bg-soft-bg border-t-8 border-light-sand">
+            
+            <h2 class="text-3xl font-extrabold text-earth-brown text-center mb-6">
+                ✨ 覺察結果：我的內在能量分佈
+            </h2>
+
+            <!-- LEGAL/ETHICAL DISCLAIMER BLOCK (新增的免責聲明) -->
+            <div class="p-4 bg-red-100 border-l-4 border-red-500 rounded-lg shadow-md mb-6">
+                <p class="font-bold text-red-700 text-lg mb-1">⚠️ 法律與倫理重要聲明 (Disclaimer)</p>
+                <p class="text-red-800 text-base leading-relaxed">
+                    本測驗僅作為個人<strong class="text-red-900">自我探索與內在覺察</strong>之工具，結果旨在提供<strong class="text-red-900">催眠（潛意識探索）的切入點</strong>。
+                    結果<strong class="text-red-900 font-extrabold">不具備任何臨床診斷效力</strong>，亦<strong class="text-red-900 font-extrabold">不得取代</strong>專業心理師或精神科醫師的正式診斷或醫療建議。
+                    若您感受到<strong class="text-red-900">強烈或持續性</strong>的情緒困擾，請務必<strong class="text-red-900">立即尋求合法的心理師或醫師協助</strong>。
+                </p>
+            </div>
+            <!-- END LEGAL/ETHICAL DISCLAIMER BLOCK -->
+
+            <!-- NEW: Horizontal Progress Bar List Area (區塊三替代) --><div class="bg-white p-6 rounded-xl shadow-lg border border-light-sand">
+                <h3 class="text-xl font-semibold text-deep-flow mb-6 text-center">
+                    五維度困擾程度分析 (0.00 ~ 5.00)
+                </h3>
+                
+                <!-- 區分範圍說明：優化手機排版，使用 flex-wrap --><div class="flex flex-wrap justify-center gap-2 sm:space-x-4 text-sm mb-4">
+                    <span class="flex items-center text-gray-600"><span class="w-3 h-3 rounded-full mr-2 bg-teal-500/50"></span>0-1.99：穩定整合區</span>
+                    <span class="flex items-center text-gray-600"><span class="w-3 h-3 rounded-full mr-2 bg-yellow-500/50"></span>2.0-3.49：潛在覺察區</span>
+                    <span class="flex items-center text-gray-600"><span class="w-3 h-3 rounded-full mr-2 bg-red-500/50"></span>3.5-5.0：高強度陰影區</span>
+                </div>
+
+                <div id="progress-bar-list" class="space-y-6">
+                    <!-- Progress bars will be generated here -->
+                </div>
+            </div>
+
+            <!-- Personalized Analysis (區塊四 & 五) --><div class="space-y-6">
+                <div id="highest-score-analysis" class="p-6 bg-light-sand/70 rounded-xl shadow-inner border border-earth-brown/50">
+                    <h3 class="text-2xl font-bold text-earth-brown mb-3">🎯 您的核心挑戰：<span id="highest-dimension-name"></span></h3>
+                    <div id="analysis-content" class="text-gray-700 space-y-4">
+                        <!-- Content will be inserted here --></div>
+                </div>
+
+                <!-- Professional Support / Hypnosis Section -->
+                <div class="p-6 bg-deep-flow/10 rounded-xl shadow-lg border border-deep-flow">
+                    <h3 class="text-2xl font-bold text-deep-flow mb-4">🧭 專業引導：潛意識探索與整合的切入點</h3>
+                    <p class="text-gray-800 mb-4">
+                        這份覺察結果能作為<strong class="text-deep-flow">您與催眠師共同對話的起點及方向</strong>。催眠能溫和地繞過意識層面的抵抗，但最終會依據與您討論後最深層的潛意識需求，量身定制以下探索方向：
+                    </p>
+                    <div id="hypnosis-focus" class="text-sm bg-white p-4 rounded-lg border border-deep-flow/30 space-y-2">
+                        <!-- Hypnosis focus will be inserted here --></div>
+                    
+                    <!-- Action Buttons: Share and Booking -->
+                    <div class="mt-6 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button id="share-btn" onclick="shareResults()"
+                                class="bg-earth-brown hover:bg-earth-brown/90 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-[1.02] text-sm sm:text-base">
+                                <svg class="inline w-5 h-5 mr-2 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.882 13.567 9 13.882 9 14.198v.604c0 .316-.118.631-.316.856l-1.396 1.54C7.294 17.156 6.83 17.5 6.25 17.5H4.25C3.56 17.5 3 16.94 3 16.25V7.75C3 7.06 3.56 6.5 4.25 6.5H6.25C6.83 6.5 7.294 6.844 7.588 7.159l1.396 1.54c.198.225.316.54.316.856v.604c0 .316-.118.631-.316.856zM15.316 13.342C15.118 13.567 15 13.882 15 14.198v.604c0 .316.118.631.316.856l1.396 1.54c.294.315.758.659 1.338.659h2c.69 0 1.25-.56 1.25-1.25V7.75C22 7.06 21.44 6.5 20.75 6.5H18.75C18.17 6.5 17.706 6.844 17.412 7.159l-1.396 1.54c-.198.225-.316.54-.316.856v.604c0 .316.118.631.316.856zM12 19V5"></path></svg>
+                                分享我的覺察結果 (複製連結與摘要)
+                        </button>
+
+                        <a href="https://sacha693.github.io/sachalai-hypnosis/index.html" 
+                           target="_blank"
+                           class="inline-block bg-deep-flow hover:bg-accent-dark text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-[1.02] text-sm sm:text-base text-center">
+                            預約探索我的內在能量 (認識瑞光沙舟)
+                        </a>
+                    </div>
+                    
+                    <!-- Success Message for Share --><div id="share-success-msg" class="text-center mt-3 text-sm text-green-700 font-semibold hidden">
+                        ✅ 結果摘要已成功複製到剪貼簿！您可以貼入社群發文與朋友分享！
+                    </div>
+                </div>
+
+                <!-- Rerun Button --><div class="text-center pt-4">
+                    <button onclick="resetApp()" 
+                            class="text-deep-flow hover:text-earth-brown font-semibold py-2 px-6 rounded-full border border-deep-flow transition duration-300">
+                        重新檢測，再次覺察 (Rerun)
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Developer Statement Footer -->
+        <footer class="text-center text-xs text-gray-500 mt-8 py-4 border-t border-light-sand">
+            <p class="mb-1 text-accent-dark font-medium">© 2025. 瑞光沙舟心靈羅盤：五維度覺察測驗</p>
+            <p>本問卷的具體問題、分析維度定義及催眠引導建議，均為開發者《瑞光沙舟》之獨家內容版權所有，未經授權，請勿複製。</p>
+            
+        </footer>
+    </div>
+
+    <script>
+        // --- Global State for Sharing ---
+        let currentFocusDimensions = [];
+        let highestOverallScore = 0;
+
+        // --- 數據定義 ---
+        const DIMENSIONS = [
+            { id: 'I', name: '內在掌控力', color: 'deep-flow' },
+            { id: 'II', name: '自我價值感', color: 'earth-brown' },
+            { id: 'III', name: '認知清晰度', color: 'deep-flow' }, // Consistent colors for contrast
+            { id: 'IV', name: '生命動力與意義', color: 'earth-brown' },
+            { id: 'V', name: '人際連結與界線', color: 'deep-flow' }
+        ];
+
+        const QUESTIONS = [
+            // I. 內在掌控力 (Self-Mastery) - 5 Questions
+            { id: 1, text: '經常失眠、淺眠，難以一夜好眠', dimId: 'I' },
+            { id: 2, text: '情緒容易爆發或焦躁不安，難以平靜下來', dimId: 'I' },
+            { id: 3, text: '想戒除壞習慣，卻總是失敗或缺乏持續度及紀律', dimId: 'I' },
+            { id: 4, text: '即使知道事情很緊急，仍會拖延到最後一刻才開始執行', dimId: 'I' },
+            { id: 5, text: '飲食和運動習慣極不規律，難以維持身體的穩定能量', dimId: 'I' },
+
+            // II. 自我價值感 (Self-Worth) - 5 Questions
+            { id: 6, text: '常陷入負面情緒的循環，習慣性自我批判', dimId: 'II' },
+            { id: 7, text: '工作或學習有成就時，仍覺得自己是冒牌者（覺得自己不配）', dimId: 'II' },
+            { id: 8, text: '對於過去的錯誤或創傷，不斷的回想造成痛苦的相關細節', dimId: 'II' },
+            { id: 9, text: '需要經常查看社群媒體或他人的反饋，才能確定自己的表現是否足夠好', dimId: 'II' },
+            { id: 10, text: '別人稱讚我時，我會感到不自在或本能地想要否定被稱讚的自己', dimId: 'II' },
+
+            // III. 認知清晰度 (Cognitive Clarity) - 5 Questions
+            { id: 11, text: '面對選擇時，總是難以抉擇（害怕選錯或害怕不夠完美)', dimId: 'III' },
+            { id: 12, text: '對未來感到迷惘，找不到明確目標或方向', dimId: 'III' },
+            { id: 13, text: '難以適應環境或角色的變化，感到強烈不安全感', dimId: 'III' },
+            { id: 14, text: '習慣於收集大量資料，但很少能真正整理出結論或開始行動（資訊焦慮）', dimId: 'III' },
+            { id: 15, text: '常因為過度分析一個問題的各種可能性，導致錯失行動的最佳時機', dimId: 'III' },
+
+            // IV. 生命動力與意義 (Life Force) - 5 Questions
+            { id: 16, text: '長期處於高壓，工作與生活嚴重失衡', dimId: 'IV' },
+            { id: 17, text: '對生活中的樂趣或舊興趣失去感受力（愉悅感缺失）', dimId: 'IV' },
+            { id: 18, text: '過度依賴網路或手機，影響了現實生活', dimId: 'IV' },
+            { id: 19, text: '每天的生活都是重複的例行公事，感到強烈的「無聊感」或「被困住」', dimId: 'IV' },
+            { id: 20, text: '我經常幻想去改變現狀，但缺乏實際開始行動的勇氣和能量', dimId: 'IV' },
+
+            // V. 人際連結與界線 (Connection) - 5 Questions
+            { id: 21, text: '難以設立或維護個人界線，擔心拒絕會破壞關係', dimId: 'V' },
+            { id: 22, text: '在社交場合感到格格不入或強烈焦慮', dimId: 'V' },
+            { id: 23, text: '與親密關係對象有溝通障礙，常陷入爭吵或冷戰', dimId: 'V' },
+            { id: 24, text: '經常把別人的需求放在自己的需求之前，也為此感到疲憊', dimId: 'V' },
+            { id: 25, text: '當我與人意見不合時，我會選擇沉默或逃避，不願正面面對', dimId: 'V' },
+        ];
+
+        // 圖表分區顏色的閾值定義
+        const ZONE_THRESHOLDS = [
+            { max: 2.0, colorClass: 'bg-teal-500/50', label: '穩定整合區', textColor: 'text-teal-700', fillClass: 'bg-teal-500' },     // 綠色：穩定整合區 (0.0 - 1.99)
+            { max: 3.5, colorClass: 'bg-yellow-500/50', label: '潛在覺察區', textColor: 'text-yellow-700', fillClass: 'bg-yellow-500' }, // 黃色：潛在覺察區 (2.0 - 3.49)
+            { max: 5.0, colorClass: 'bg-red-500/50', label: '高強度陰影區', textColor: 'text-red-700', fillClass: 'bg-red-500' }      // 紅色：高強度陰影區 (3.5 - 5.0)
+        ];
+        
+        // 核心分析文案
+        const ANALYSIS_CONTENT = {
+            I: {
+                name: '內在掌控力',
+                insight: '關於意志力、紀律與效能的挑戰。缺乏內在的自我規範。',
+                low: '恭喜！您在日常生活中展現出高度的自我紀律與情緒穩定。這意味著您的潛意識資源與意識目標高度協調，能夠有效地管理時間、習慣，並保持穩定的身心狀態。您是自己人生的掌舵者。',
+                mid: '您在自我掌控方面表現良好，但仍存在偶爾的掙扎。拖延、輕微的焦慮或難以保持長期習慣是您需要關注的信號。潛意識可能正試圖溝訴您，您內在的某些需求或情緒正在被忽略。',
+                high: '您的潛意識正透過失眠、焦躁或習慣性拖延發出強烈的求救信號。這表明您的內在能量分佈嚴重失衡，意識和潛意識之間存在劇烈衝突。您可能長期處於戰或逃模式，亟需重新校準您的內在羅盤，恢復對自我生命的掌控權。',
+                focus: [
+                    '深度放鬆技術：探索潛意識中關於紀律、效率和自我規範的核心信念。',
+                    '情緒重設：追溯並處理造成情緒爆發或焦慮的潛在觸發點或舊創傷。',
+                    '習慣建構：在潛意識層面建立新的自我身份認同，讓正面習慣成為本能。'
+                ]
+            },
+            II: {
+                name: '自我價值感',
+                insight: '關於自我批判、自卑與尋求認可的挑戰。害怕被拋棄與不值得被愛。',
+                low: '您擁有穩固的自我價值基石，能夠從內在汲取力量，而不是依賴外部的認可。您懂得欣賞自己的成就，並能從錯誤中學習，維持一種健康且強大的自我認同。',
+                mid: '您的自我價值感是穩定的，但在面對重大挑戰或外部評價時會產生波動。您可能偶爾會有「冒牌者症候群」或過度在意他人眼光。潛意識正在提醒您，需要更深入地接納那個不完美的自己。',
+                high: '您正處於持續性的自我批判和價值低落的陰影中。您可能無法接受讚美、害怕成功，並且不斷回放過去的創傷細節。您的潛意識需要被療癒，因為「不值得被愛」或「我還不夠好」的核心信念正在耗盡您的生命能量。',
+                focus: [
+                    '內在小孩修復：處理童年創傷，修復核心的自卑與不值得感。',
+                    '批評者聲音重編：將內在嚴厲的批評者轉化為溫和的支持者。',
+                    '成就感錨定：在潛意識中建立堅實的自我接納基礎，無需外在認可。'
+                ]
+            },
+            III: {
+                name: '認知清晰度',
+                insight: '關於判斷力、視野與恐懼不確定性的挑戰。過度分析與擔憂。',
+                low: '您擁有卓越的決策能力和清晰的思維模式。您能理性地處理資訊，不會被過度分析所困，可以迅速找到目標並採取行動。您知道在混沌中保持內在的平靜。',
+                mid: '您在需要做決策時，有時會陷入資訊焦慮或優柔寡斷。對未來的迷惘和不安全感會讓您難以適應變化。潛意識可能正試圖保護您免受「做錯決定」的風險。',
+                high: '您正被選擇的恐懼和過度分析的習慣所困擾。您的大腦處於高頻運轉狀態，難以將資訊轉化為行動。潛意識中可能隱藏著對失控、不完美或未知風險的巨大恐懼，嚴重阻礙了您前進的步伐。',
+                focus: [
+                    '決策模式重寫：將「完美主義」和「害怕犯錯」的信念轉化為「允許嘗試」的信念。',
+                    '未來願景探索：協助潛意識清晰地看見未來目標，消除迷惘感。',
+                    '放下控制的幻覺：在潛意識層面接納不確定性，建立內在的安全感錨點。'
+                ]
+            },
+            IV: {
+                name: '生命動力與意義',
+                insight: '關於熱情、生命能量與活出真實自我的挑戰。生命能量被耗盡。',
+                low: '您對生活充滿了熱情和動力，能夠在工作和生活中找到平衡與樂趣。您清楚自己的價值觀和目標，並充滿能量地追求它們。您的生命力正在蓬勃發展。',
+                mid: '您感到生活動力略有不足，有時會感到「無聊」或「被困住」，並可能過度依賴手機或網路來逃避現實。潛意識可能正呼籲您檢視目前的生活是否與您真正的「自我」產生了偏離。',
+                high: '您正處於明顯的倦怠狀態，對生活中的一切失去感受力，甚至感到生存的意義薄弱。工作與生活嚴重失衡，缺乏實際行動的勇氣和能量。您的生命能量在潛意識中被大量的壓抑和舊有的模式所耗盡。',
+                focus: [
+                    '找回核心熱情：探索潛意識中被壓抑的渴望、夢想與天賦。',
+                    '倦怠感釋放：溫和地釋放長期積累的壓力與情緒耗竭。',
+                    '價值重塑：將日常例行公事與個人的核心價值觀重新連結，讓生活充滿意義。'
+                ]
+            },
+            V: {
+                name: '人際連結與界線',
+                insight: '關於親密關係、界線與共情能力的挑戰。在關係中難以找到平衡。',
+                low: '您在人際關係中表現出高度的同理心與健康的界線感。您能夠表達自己的需求，同時也尊重他人的空間，享受著平衡且支持性的親密關係與社交連結。',
+                mid: '您在人際關係方面大致良好，但在親密關係中仍有溝通障礙或冷戰的習慣。您可能會犧牲自己的需求來滿足他人，或在社交場合感到輕微焦慮。潛意識可能正提醒您，需要更堅定地守護您的個人界線。',
+                high: '您在人際關係中承受著巨大的壓力，長期難以設立健康界線，總是將他人的需求置於自己之上，導致身心俱疲。您可能因害怕衝突而選擇逃避或沉默。您的潛意識中可能存在對孤立、被拋棄或不被接納的深層恐懼。',
+                focus: [
+                    '設立安全界線：在潛意識中建立清晰且堅固的內在界線感。',
+                    '溝通模式轉化：處理導致親密關係衝突或冷戰的潛意識反應模式。',
+                    '依戀修復：療癒與重要他人的關係創傷，建立健康且安全的依戀模式。'
+                ]
+            }
+        };
+
+        // --- 核心工具函數 ---
+
+        // 根據分數範圍判斷區域
+        function getZone(score) {
+            for (let zone of ZONE_THRESHOLDS) {
+                if (score < zone.max) {
+                    return zone;
+                }
+            }
+            return ZONE_THRESHOLDS[ZONE_THRESHOLDS.length - 1];
+        }
+
+        // 根據分數獲取分析文案
+        function getAnalysisText(dimId, score) {
+            const content = ANALYSIS_CONTENT[dimId];
+            if (!content) return '';
+
+            if (score >= 3.5) return `<p class="font-bold text-red-700">【高強度陰影區：${score.toFixed(2)} 分】</p><p>${content.high}</p>`;
+            if (score >= 2.0) return `<p class="font-bold text-yellow-700">【潛在覺察區：${score.toFixed(2)} 分】</p><p>${content.mid}</p>`;
+            return `<p class="font-bold text-teal-700">【穩定整合區：${score.toFixed(2)} 分】</p><p>${content.low}</p>`;
+        }
+        
+        // 獲取維度洞察說明
+        function getDimensionInsight(id) {
+            return ANALYSIS_CONTENT[id]?.insight || '';
+        }
+
+        // 渲染進度條
+        function renderProgressBars(scoreList) {
+            const container = document.getElementById('progress-bar-list');
+            let html = '';
+
+            scoreList.forEach(d => {
+                const zone = getZone(d.score);
+                const percentage = (d.score / 5.0) * 100;
+                const scoreStr = d.score.toFixed(2);
+
+                html += `
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-end">
+                            <span class="text-sm font-semibold text-gray-700">${d.id}. ${d.name}</span>
+                            <span class="${zone.textColor} font-extrabold text-xl">${scoreStr}</span>
+                        </div>
+                        <div class="relative w-full h-3 ${zone.colorClass} rounded-full overflow-hidden shadow-inner">
+                            <div class="progress-bar-fill h-full rounded-full transition-all duration-1000 ease-out ${zone.fillClass}"
+                                 style="width: ${percentage}%;">
+                            </div>
+                        </div>
+                        <p class="text-xs ${zone.textColor} font-medium mt-1 text-right">位於：${zone.label}</p>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 渲染分析結果 (區塊四與五)
+        function renderAnalysis(focusDimensions) {
+            const highestDim = focusDimensions[0];
+            
+            document.getElementById('highest-dimension-name').textContent = `${highestDim.name} (${highestDim.id})`;
+
+            // 核心挑戰分析 (區塊四)
+            const analysisContent = document.getElementById('analysis-content');
+            analysisContent.innerHTML = getAnalysisText(highestDim.id, highestDim.score);
+            
+            // 催眠焦點建議 (區塊五)
+            const hypnosisFocus = document.getElementById('hypnosis-focus');
+            const focusPoints = ANALYSIS_CONTENT[highestDim.id].focus;
+            let focusHtml = focusPoints.map(p => `
+                <div class="flex items-start">
+                    <span class="text-deep-flow mr-2 flex-shrink-0">✦</span>
+                    <p class="text-gray-800">${p}</p>
+                </div>
+            `).join('');
+            hypnosisFocus.innerHTML = focusHtml;
+        }
+
+
+        // --- 初始化問卷 ---
+        window.onload = function() {
+            renderQuestions();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionnaire-section');
+            container.innerHTML = `
+                <h2 class="text-2xl font-semibold text-deep-flow border-b pb-2 mb-4">
+                    五維度困擾評估（影響程度參考上方說明）
+                </h2>
+            `;
+
+            let html = '';
+            let currentDimId = '';
+
+            QUESTIONS.forEach((q, index) => {
+                if (q.dimId !== currentDimId) {
+                    const dim = DIMENSIONS.find(d => d.id === q.dimId);
+                    if (currentDimId !== '') {
+                        html += `</div>`; // Close previous dimension group
+                    }
+                    // 區塊標題
+                    html += `<div class="p-4 bg-light-sand/30 rounded-lg shadow-md mt-6">
+                                <h3 class="text-xl font-bold text-deep-flow mb-3">
+                                    ${dim.id}. ${dim.name} 
+                                </h3>
+                                <p class="text-sm text-accent-dark mb-4">${getDimensionInsight(dim.id)}</p>
+                            </div>
+                            <div class="space-y-4 pt-2">`;
+                    currentDimId = q.dimId;
+                }
+                
+                // 問卷項目
+                html += `
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-white p-4 rounded-lg shadow-sm border border-soft-bg">
+                        <label for="q-${index}" class="flex-1 text-gray-700 font-medium mr-4 text-left">
+                            ${q.id}. ${q.text}
+                        </label>
+                        <div class="flex items-center space-x-4 w-full sm:w-auto mt-2 sm:mt-0">
+                            <input type="range" min="0" max="5" value="0" step="1" id="q-${index}" name="q-${index}" 
+                                   class="range-slider appearance-none bg-gray-200 h-2 rounded-full flex-1 cursor-pointer"
+                                   oninput="this.nextElementSibling.value=this.value">
+                            <output class="w-8 text-center font-bold text-lg text-earth-brown">0</output>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div>`; // Close last dimension group
+            container.innerHTML += html;
+        }
+
+        // --- 核心計算與結果呈現 ---
+        function calculateScores() {
+            const scores = {};
+            DIMENSIONS.forEach(d => scores[d.id] = []);
+            
+            // 1. 收集分數
+            QUESTIONS.forEach((q, index) => {
+                const input = document.getElementById(`q-${index}`);
+                const value = parseInt(input.value);
+                scores[q.dimId].push(value);
+            });
+            
+            // 2. 計算平均分
+            const scoreList = [];
+            DIMENSIONS.forEach(d => {
+                const sum = scores[d.id].reduce((a, b) => a + b, 0);
+                const avg = (sum / 5); // 每個維度固定 5 題
+                scoreList.push({ ...d, score: avg });
+            });
+
+            // 3. 找出最高分維度 (允許平手)
+            scoreList.sort((a, b) => b.score - a.score);
+            const highestScore = scoreList[0].score;
+            // 找出所有與最高分接近（誤差小於0.05）的維度，作為核心挑戰
+            currentFocusDimensions = scoreList.filter(d => d.score >= (highestScore - 0.05)); 
+            highestOverallScore = highestScore;
+
+            // 4. 渲染結果
+            renderProgressBars(scoreList);
+            renderAnalysis(currentFocusDimensions);
+
+            // 5. 隱藏問卷，顯示結果區
+            document.getElementById('questionnaire-section').classList.add('hidden');
+            document.getElementById('submit-btn').parentElement.classList.add('hidden'); // 隱藏按鈕區塊
+            document.getElementById('result-section').classList.remove('hidden');
+
+            // 滾動到結果頂部
+            document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+
+        // --- 分享與重設功能 ---
+
+        function shareResults() {
+            let focusNames = currentFocusDimensions.map(d => `${d.name} (${d.score.toFixed(2)}分)`).join('、');
+            if (currentFocusDimensions.length > 1) {
+                focusNames = `【並列最高分】${focusNames}`;
+            } else if (highestOverallScore < 2.0) {
+                focusNames = '目前沒有顯著的困擾維度，內在能量穩定。';
+            } else {
+                focusNames = `【核心挑戰】${focusNames}`;
+            }
+
+            const shareText = `
+✨ 我的心靈羅盤覺察結果 ✨
+
+我剛剛進行了瑞光沙舟的五維度覺察測驗！
+我的內在能量分佈結果顯示：
+
+${focusNames}
+
+這是一個深入潛意識自我探索的絕佳起點！
+想知道你的內在呼喚是什麼嗎？快來測試：
+[連結待補]
+            `.trim();
+            
+            // 使用 document.execCommand('copy') 來確保在 iframe 環境下成功複製
+            const textArea = document.createElement("textarea");
+            textArea.value = shareText;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.top = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                const msg = document.getElementById('share-success-msg');
+                if (successful) {
+                    msg.classList.remove('hidden');
+                    setTimeout(() => msg.classList.add('hidden'), 5000);
+                } else {
+                    console.error('Copy command failed.');
+                }
+            } catch (err) {
+                console.error('Unable to copy', err);
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function resetApp() {
+            // 重置所有滑塊到 0
+            const sliders = document.querySelectorAll('.range-slider');
+            sliders.forEach(slider => {
+                slider.value = 0;
+                slider.nextElementSibling.value = 0;
+            });
+
+            // 隱藏結果，顯示問卷
+            document.getElementById('result-section').classList.add('hidden');
+            document.getElementById('questionnaire-section').classList.remove('hidden');
+            document.getElementById('submit-btn').parentElement.classList.remove('hidden');
+
+            // 清空結果區內容 (可選)
+            document.getElementById('progress-bar-list').innerHTML = '';
+            document.getElementById('highest-dimension-name').textContent = '';
+            document.getElementById('analysis-content').innerHTML = '';
+            document.getElementById('hypnosis-focus').innerHTML = '';
+
+            // 滾動到問卷頂部
+            document.getElementById('app').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 重新調用一次以確保初始渲染
+        window.onload();
+
+    </script>
+</body>
+</html>
