@@ -146,7 +146,7 @@
 
             <!-- Personalized Analysis (區塊四 & 五) --><div class="space-y-6">
                 <div id="highest-score-analysis" class="p-6 bg-light-sand/70 rounded-xl shadow-inner border border-earth-brown/50">
-                    <h3 class="text-2xl font-bold text-earth-brown mb-3">🎯 您的潛意識想表達的是：<span id="highest-dimension-name"></span></h3>
+                    <h3 class="text-2xl font-bold text-earth-brown mb-3">🎯 您的內在探索方向：<span id="highest-dimension-name"></span></h3>
                     <div id="analysis-content" class="text-gray-700 space-y-4">
                         <!-- Content will be inserted here --></div>
                 </div>
@@ -206,7 +206,7 @@
         const DIMENSIONS = [
             { id: 'I', name: '內在掌控力', color: 'deep-flow' },
             { id: 'II', name: '自我價值感', color: 'earth-brown' },
-            { id: 'III', name: '認知清晰度', color: 'deep-flow' }, // Consistent colors for contrast
+            { id: 'III', name: '思考及行動力', color: 'deep-flow' }, // Consistent colors for contrast
             { id: 'IV', name: '生命動力與意義', color: 'earth-brown' },
             { id: 'V', name: '人際連結與界線', color: 'deep-flow' }
         ];
@@ -226,7 +226,7 @@
             { id: 9, text: '需要經常查看社群媒體或他人的反饋，才能確定自己的表現是否足夠好', dimId: 'II' },
             { id: 10, text: '別人稱讚我時，我會感到不自在或本能地想要否定被稱讚的自己', dimId: 'II' },
 
-            // III. 認知清晰度 (Cognitive Clarity) - 5 Questions
+            // III. 思考及行動力 (Cognitive Clarity) - 5 Questions
             { id: 11, text: '面對選擇時，總是難以抉擇（害怕選錯或害怕不夠完美)', dimId: 'III' },
             { id: 12, text: '對未來感到迷惘，找不到明確目標或方向', dimId: 'III' },
             { id: 13, text: '難以適應環境或角色的變化，感到強烈不安全感', dimId: 'III' },
@@ -282,7 +282,7 @@
                 ]
             },
             III: {
-                name: '認知清晰度',
+                name: '思考及行動力',
                 insight: '關於判斷力、視野與恐懼不確定性的挑戰。過度分析與擔憂。',
                 low: '您擁有卓越的決策能力和清晰的思維模式。您能理性地處理資訊，不會被過度分析所困，可以迅速找到目標並採取行動。您知道在混沌中保持內在的平靜。',
                 mid: '您在需要做決策時，有時會陷入資訊焦慮或優柔寡斷。對未來的迷惘和不安全感會讓您難以適應變化。潛意識可能正試圖保護您免受「做錯決定」的風險。',
