@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>心靈羅盤：內在覺察與能量分析 </title>
+    <title>瑞光沙舟：內在覺察與能量分析 </title>
     <!-- 載入 Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KYNM9QMPM3"></script>
     <script>
@@ -99,7 +99,7 @@
         </header>
         <!-- Questionnaire Section (區塊二) --><div id="questionnaire-section" class="p-4 md:p-8 space-y-6">
             <h2 class="text-2xl font-semibold text-deep-flow border-b pb-2 mb-4">
-                困擾維度評估（影響程度參考上方說明）
+                困擾維度分析（影響程度參考上方說明）
             </h2>
 
             <!-- Questions will be dynamically generated here by JavaScript --></div>
@@ -146,7 +146,7 @@
 
             <!-- Personalized Analysis (區塊四 & 五) --><div class="space-y-6">
                 <div id="highest-score-analysis" class="p-6 bg-light-sand/70 rounded-xl shadow-inner border border-earth-brown/50">
-                    <h3 class="text-2xl font-bold text-earth-brown mb-3">🎯 您的核心挑戰：<span id="highest-dimension-name"></span></h3>
+                    <h3 class="text-2xl font-bold text-earth-brown mb-3">🎯 您的潛意識想表達的是：<span id="highest-dimension-name"></span></h3>
                     <div id="analysis-content" class="text-gray-700 space-y-4">
                         <!-- Content will be inserted here --></div>
                 </div>
@@ -381,7 +381,7 @@
             
             document.getElementById('highest-dimension-name').textContent = `${highestDim.name} (${highestDim.id})`;
 
-            // 核心挑戰分析 (區塊四)
+            // 潛意識探索方向分析 (區塊四)
             const analysisContent = document.getElementById('analysis-content');
             analysisContent.innerHTML = getAnalysisText(highestDim.id, highestDim.score);
             
@@ -473,7 +473,7 @@
             // 3. 找出最高分維度 (允許平手)
             scoreList.sort((a, b) => b.score - a.score);
             const highestScore = scoreList[0].score;
-            // 找出所有與最高分接近（誤差小於0.05）的維度，作為核心挑戰
+            // 找出所有與最高分接近（誤差小於0.05）的維度，作為潛意識探索方向
             currentFocusDimensions = scoreList.filter(d => d.score >= (highestScore - 0.05)); 
             highestOverallScore = highestScore;
 
@@ -500,7 +500,7 @@
             } else if (highestOverallScore < 2.0) {
                 focusNames = '目前沒有顯著的困擾維度，內在能量穩定。';
             } else {
-                focusNames = `【核心挑戰】${focusNames}`;
+                focusNames = `【潛意識探索方向】${focusNames}`;
             }
 
             const shareText = `
